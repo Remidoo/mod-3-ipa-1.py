@@ -31,12 +31,15 @@ def shift_letter(letter, shift):
     '''
     # Replace `pass` with your code. 
     # Stay within the function. Only use the parameters as input. The function should return your answer.
-    alphabet = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z')
-    if letter == '':
-        result += ' '
-    
-    index = alphabet.index(letter)
-    return(alphabet[index+shift])
+    import string
+    alphabet_list = string.ascii_uppercase
+    if letter != " ":
+        new_position = alphabet_list.index(letter) + int(shift)
+        while new_position > 25:
+            new_position = new_position - 26
+        return alphabet_list[new_position]
+    elif letter == " ":
+        return " "
 
 def caesar_cipher(message, shift):
     '''Caesar Cipher. 
@@ -185,24 +188,23 @@ def scytale_cipher(message, shift):
     '''
     # Replace `pass` with your code. 
     # Stay within the function. Only use the parameters as input. The function should return your answer.
-    n = len(message)
-    if n % shift > 0:
-        a = abs((int((n) // shift))-shift)
-        m = n + a
-        columns = m // shift
-        ciphertext = ['-'] * m
-        newm = message + ('_')*a
-        for i in range (m):
-            row = i // columns
-            col = i % columns
-            ciphertext[col * shift + row] = newm[i]
-    elif n % shift == 0:
-        columns = n // shift
-        ciphertext = ['-'] * n
-        for i in range(n):
-            row = i // columns
-            col = i % columns
-            ciphertext[col * shift + row] = message[i]
+    import math 
+    message_list = list(message)
+    quotient = len(message) / shift
+    ceiling = math.ceil(quotient)
+    closest_num = ceiling * shift
+    if len(message) % shift == 0:
+        final_message = message 
+    elif len(message) != 0:
+        for i in range(closest_num - len(message)):
+            message_list.append("_")
+            final_message = "".join(message_list)
+    columns = len(final_message) // shift
+    ciphertext = ["_"] * len(final_message)
+    for i in range(len(final_message)):
+        row = i // columns
+        col = i % columns
+        ciphertext[col * shift + row] = final_message[i]
     return "".join(ciphertext)
 def scytale_decipher(message, shift):
     '''Scytale De-cipher.
